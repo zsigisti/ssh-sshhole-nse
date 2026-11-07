@@ -7,10 +7,10 @@ Everything needed to contribute `ssh-sshhole.nse` to the Nmap project
 
 ## Status / honesty note before you submit
 
-- **No CVE yet.** The bug was fixed on 2026-11-05; a CVE may not be assigned at the
-  time of reading. Upstream reviewers usually prefer a CVE in the `IDS`/references.
-  Add it to the script (see "If/when a CVE is assigned" below) before or during
-  review if one exists.
+- **CVE-2026-123158** is assigned and already referenced in the script.
+- **Alpine backported the fix without bumping the banner version**, so an in-range
+  banner does not prove the host is unpatched. The script states this and tells the
+  operator to confirm locally.
 - **This is a banner/version check, not a prober.** It cannot confirm musl, PAM,
   config or accounts remotely without performing the bypass, which it deliberately
   does not do. The banner-shape grading (below) keeps false positives down by

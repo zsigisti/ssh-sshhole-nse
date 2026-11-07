@@ -1,8 +1,9 @@
-### Add ssh-sshhole.nse — detect the *sshole OpenSSH-on-musl password-auth bypass
+### Add ssh-sshhole.nse — detect the *sshole OpenSSH-on-musl password-auth bypass (CVE-2026-123158)
 
 **What**
 
-A detection-only NSE script for the *sshole* vulnerability (https://sshhole.com):
+A detection-only NSE script for the *sshole* vulnerability, CVE-2026-123158
+(https://sshhole.com):
 on musl systems (Alpine, OpenWrt, Buildroot, Yocto, ...) with sshd built without
 PAM and `PasswordAuthentication yes`, OpenSSH 7.3p1–10.6p1 authenticates any
 account whose password field is `*` when given a >256-byte password. Fixed in
@@ -31,7 +32,10 @@ native banner is indistinguishable from Alpine's but is not affected, and the
 **Testing** `luac -p` clean; `--script-help` loads; a banner-shape test harness
 passes 11/11; verified against live Alpine containers. No bypass performed.
 
-**Caveat** The bug is very recent; if a CVE has been assigned I will add it to the
-references. Happy to adjust categories or wording per reviewer preference.
+**Caveat** Alpine backported the fix into every branch without changing the banner
+version, so an in-range banner does not prove the host is unpatched — the script
+says so and recommends local confirmation. Happy to adjust categories or wording
+per reviewer preference.
 
-References: https://sshhole.com · https://www.openssh.com/txt/release-10.6p2
+References: https://sshhole.com · https://nvd.nist.gov/vuln/detail/CVE-2026-123158 ·
+https://www.openssh.com/txt/release-10.6p2

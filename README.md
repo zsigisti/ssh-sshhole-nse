@@ -1,7 +1,8 @@
 # ssh-sshhole.nse
 
 An Nmap NSE **detection** script for the *sshole* OpenSSH password-authentication
-bypass ([sshhole.com](https://sshhole.com), fixed in OpenSSH 10.6p2, 2026-11-05).
+bypass — **CVE-2026-123158** ([sshhole.com](https://sshhole.com), fixed in OpenSSH
+10.6p2, 2026-11-05).
 
 It is **detection-only**: it never attempts the bypass and never sends any
 credentials. It reads the SSH identification banner and grades the risk from the
@@ -37,6 +38,10 @@ containers:
 The Alpine banner trait is the key signal: the binary is `OpenSSH_10.3p1` but the
 on-wire banner is `SSH-2.0-OpenSSH_10.3`. This lets the script clear the
 glibc-tagged majority of the internet (Debian/Ubuntu) instead of flagging it.
+
+One more reason to confirm locally: **Alpine backported the fix into every branch
+without changing the banner version** (a patched 3.24 still reports `OpenSSH_10.3`),
+so an in-range banner does not prove the host is actually unpatched.
 
 ## Usage
 

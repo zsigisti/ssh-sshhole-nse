@@ -33,8 +33,15 @@ so even the strongest result means "verify locally", not "confirmed exploitable"
 To confirm on a host you control, run the project's check.sh locally:
   https://raw.githubusercontent.com/oz9un/sshole/main/check.sh
 
+Tracked as CVE-2026-123158. Note that Alpine backported the fix into every
+branch WITHOUT changing the banner version (a patched 3.24 still reports
+"OpenSSH_10.3"), so the banner cannot distinguish patched from unpatched Alpine
+-- always confirm a positive locally.
+
 References:
 * https://sshhole.com
+* https://nvd.nist.gov/vuln/detail/CVE-2026-123158
+* https://cycode.com/blog/sshole-cve-2026-123158-openssh-alpine-linux-vulnerability/
 * https://www.openssh.com/txt/release-10.6p2
 ]]
 
@@ -197,19 +204,25 @@ action = function(host, port)
   end
 
   out.VULNERABLE = ("%s -- OpenSSH %s is in the affected range 7.3p1..10.6p1 "):format(verdict, ver)
-    .. "(no bypass attempted)"
+    .. "(CVE-2026-123158; no bypass attempted)"
   out.title = "*sshole: OpenSSH password-auth bypass on musl without PAM"
+  out.cve = "CVE-2026-123158"
   out.detected_version = "OpenSSH " .. ver
   out.banner = banner
   out.confidence = confidence
   out.risk_factor = "High, but ONLY if musl libc + sshd without PAM + PasswordAuthentication yes"
   out.detail = "Remote detection is banner-based: even the strongest banner shape "
     .. "cannot confirm musl libc for certain, nor the absence of PAM, the config, "
-    .. "or the '*'/donor-hash account preconditions. No bypass was attempted and no "
-    .. "credentials were sent."
+    .. "or the '*'/donor-hash account preconditions. Alpine also backports the fix "
+    .. "without changing the banner version, so an in-range banner does not prove the "
+    .. "host is unpatched. No bypass was attempted and no credentials were sent."
   out.confirm_locally = "curl -sO https://raw.githubusercontent.com/oz9un/sshole/main/check.sh && sudo sh check.sh"
-  out.fix = "Upgrade to OpenSSH 10.6p2 (e.g. apk upgrade openssh), or set PasswordAuthentication no."
+  out.fix = "Upgrade to OpenSSH 10.6p2 / your distro's patched build (e.g. apk upgrade openssh), or set PasswordAuthentication no."
   out.disclosed = "2026-11-05"
-  out.references = { "https://sshhole.com", "https://www.openssh.com/txt/release-10.6p2" }
+  out.references = {
+    "https://sshhole.com",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-123158",
+    "https://www.openssh.com/txt/release-10.6p2",
+  }
   return out
 end
