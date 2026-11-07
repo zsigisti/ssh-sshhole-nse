@@ -40,12 +40,14 @@ fi
 gh repo fork "$UPSTREAM" --clone=false >/dev/null 2>&1 || true
 
 if [ ! -d "$WORK/.git" ]; then
-  git clone "https://github.com/$ME/nmap.git" "$WORK"
+  git clone --depth 1 "https://github.com/$ME/nmap.git" "$WORK"
 fi
 cd "$WORK"
-git remote add upstream "https://github.com/$UPSTREAM.git" 2>/dev/null || true
-git fetch upstream "$BASE"
-git checkout -B "$BRANCH" "upstream/$BASE"
+# Base the branch on the fork's own master (just created from nmap master), not on
+# a separately-fetched upstream/master -- mixing a shallow clone with an upstream
+# fetch leaves the pushed branch without a shared base and the fork rejects it.
+git fetch --depth 1 origin "$BASE"
+git checkout -B "$BRANCH" "origin/$BASE"
 
 cp "$SCRIPT" scripts/ssh-sshhole.nse
 if [ -x ./nmap ]; then

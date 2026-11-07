@@ -1,5 +1,10 @@
 # Upstream Nmap submission package
 
+> **SUBMITTED:** this script is already proposed upstream as
+> **https://github.com/nmap/nmap/pull/3601** (from `zsigisti:nse-ssh-sshhole`).
+> To push an updated script to that PR, force-update the branch on the fork and the
+> PR follows automatically. The notes below remain the reference for the submission.
+
 Everything needed to contribute `ssh-sshhole.nse` to the Nmap project
 (https://github.com/nmap/nmap). The script itself is the copy at the repo root
 (`../ssh-sshhole.nse`, the single source of truth); it already carries the
